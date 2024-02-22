@@ -13,12 +13,14 @@ using namespace std;
 class StudentWorld : public GameWorld
 {
 public:
-  StudentWorld(std::string assetPath);
-  virtual int init();
-  virtual int move();
-  virtual void cleanUp();
+	StudentWorld(std::string assetPath);
+	~StudentWorld();
+	virtual int init();
+	virtual int move();
+	virtual void cleanUp();
+	bool runOver(double x, double y);
 
-  void addActor(Actor* actor);
+	void addActor(Actor* actor);
 
 private:
 	list<Actor*> actors;
@@ -26,4 +28,3 @@ private:
 };
 
 #endif // STUDENTWORLD_H_
-
