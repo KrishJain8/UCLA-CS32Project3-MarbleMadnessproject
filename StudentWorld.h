@@ -19,12 +19,19 @@ public:
 	virtual int move();
 	virtual void cleanUp();
 	bool runOver(double x, double y);
+	bool takesDamage(double x, double y);
+	void damage(double x, double y, int damage);
+	Avatar* getAvatar();
+
+	Actor* getActor(int x, int y);
 
 	void addActor(Actor* actor);
 
 private:
 	list<Actor*> actors;
 	Avatar* _avatar;
+
+	int crystals;
 };
 
 #endif // STUDENTWORLD_H_
