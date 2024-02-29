@@ -31,8 +31,17 @@ int StudentWorld::init()
                    _avatar = new Avatar(this, i, j);
                    actors.push_back(_avatar);
                }
+               if (item == Level::exit) {
+                   actors.push_back(new Exit(this, i, j));
+               }
                if (item == Level::wall) {
                    actors.push_back(new Wall(this, i, j));
+               }
+               if (item == Level::marble) {
+                   actors.push_back(new Marble(this, i, j));
+               }
+               if (item == Level::pit) {
+                   actors.push_back(new Pit(this, i, j));
                }
            }
        }
@@ -50,9 +59,12 @@ int StudentWorld::move()
     while (i != actors.end()) {
         (*i)->doSomething();
         if (!((*i)->isAlive())) {
-            return GWSTATUS_PLAYER_DIED;
+            delete* i;
+            i = actors.erase(i);
         }
-        i++;
+        else {
+            i++;
+        }
     }
     double x = _avatar->getX();
     double y = _avatar->getY();
@@ -75,6 +87,7 @@ void StudentWorld::cleanUp()
     }
 
 }
+
 void StudentWorld::addActor(Actor* actor)
 {
     actors.push_front(actor);
@@ -86,6 +99,37 @@ bool StudentWorld::runOver(double x, double y) {
         }
     }
     return true;
+}
+bool StudentWorld::takesDamage(double x, double y) {
+    for (list<Actor*>::iterator i = actors.begin(); i != actors.end(); i++) {
+        if ((*i)->getX() == x && (*i)->getY() == y) {
+            return (*i)->takeDamage();
+        }
+    }
+    return true;
+}
+
+void StudentWorld::damage(double x, double y, int damage) {
+    for (list<Actor*>::iterator i = actors.begin(); i != actors.end(); i++) {
+        if ((*i)->getX() == x && (*i)->getY() == y) {
+            int health = (*i)->getHealth();
+            if ((*i)->takeDamage()) {
+                (*i)->updateHealth(health - damage); //if wall or factory, don't damage!
+            }
+            
+        }
+    }
+}
+
+Avatar* StudentWorld::getAvatar() {
+    return _avatar;
+}
+Actor* StudentWorld:: getActor(int x, int y) {
+    for (list<Actor*>::iterator i = actors.begin(); i != actors.end(); i++) {
+        if ((*i)->getX() == x && (*i)->getY() == y) {
+            return (*i);
+        }
+    }
 }
 StudentWorld::~StudentWorld() {
     cleanUp();
